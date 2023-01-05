@@ -8,9 +8,7 @@ router.get('/', async (req, res) => {
   // find all products
   try {
     const productData = await Product.findAll({
-      include: [Category,  { model: Tag, 
-        through: ProductTag,
-      }]
+      include: [Category,  { model: Tag, through: ProductTag,}]
     })
     res.status(200).json(productData);
   } catch (err) {
@@ -20,10 +18,13 @@ router.get('/', async (req, res) => {
 });
 
 // get one product
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find a single product by its `id`
   try {
-    const productData = Product.findOne({
+    const productData = await Product.findOne({
+      where: {
+        id: req.params.id,
+      },
       include: [{ model: Category },  { model: Tag, through: ProductTag, }]
     })
     if (!productData) {
